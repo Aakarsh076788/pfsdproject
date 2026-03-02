@@ -1,0 +1,22 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: agro
+      POSTGRES_PASSWORD: agro
+      POSTGRES_DB: agrodb
+    ports: ['5432:5432']
+    volumes: [pgdata:/var/lib/postgresql/data]
+  backend:
+    build: ../backend
+    environment:
+      DATABASE_URL: postgresql+psycopg2://agro:agro@db:5432/agrodb
+    depends_on: [db]
+    ports: ['8000:8000']
+  frontend:
+    build: ../frontend
+    depends_on: [backend]
+    ports: ['5173:5173']
+volumes:
+  pgdata:
